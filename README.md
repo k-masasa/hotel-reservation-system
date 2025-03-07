@@ -1,1 +1,5 @@
-This repository is empty. Any task executed on it should be considered a new capability and needs to be created.
+
+ホテルの予約管理システム
+
+Copilot Workspace で生成したデモ。
+
