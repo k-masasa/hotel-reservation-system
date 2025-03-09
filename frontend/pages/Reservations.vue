@@ -32,7 +32,7 @@ export default defineComponent({
 
     const fetchReservations = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/reservations')
+        const response = await axios.get('http://backend:5000/reservations')
         reservations.value = response.data
       } catch (error) {
         console.error('Failed to fetch reservations', error)
