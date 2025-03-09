@@ -2,38 +2,12 @@ version: '3.8'
 
 services:
   frontend:
-    image: node:14
-    command: yarn dev
+    build:
+      context: ./frontend
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-    networks:
-      - app-network
-
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./backend:/app
-    networks:
-      - app-network
-    depends_on:
-      - db
-
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: hotel_reservation
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3306:3306"
-    volumes:
-      - db-data:/var/lib/mysql
     networks:
       - app-network
 
