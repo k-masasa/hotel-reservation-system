@@ -10,11 +10,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "nuxt": "latest"
+    "nuxt": "^3.16.0"
   },
   "devDependencies": {
-    "@nuxt/typescript-build": "latest",
-    "typescript": "latest"
+    "@nuxt/typescript-build": "^3.0.2",
+    "typescript": "^5.8.2"
   },
   "author": "",
   "license": "ISC"
