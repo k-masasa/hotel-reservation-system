@@ -3,7 +3,7 @@ import { defineNuxtConfig } from 'nuxt3'
 export default defineNuxtConfig({
   // Global page headers
   head: {
-    title: 'hotel-reservation-system',
+    title: 'Hotel Reservation System',
     htmlAttrs: {
       lang: 'en'
     },
@@ -40,5 +40,10 @@ export default defineNuxtConfig({
 
   // Build Configuration
   build: {
+  },
+
+  // Server configuration
+  server: {
+    host: '0.0.0.0'
   }
 })

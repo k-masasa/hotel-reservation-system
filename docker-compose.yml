@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   frontend:
-    build:
-      context: ./frontend
+    image: nuxt:latest
+    command: yarn dev
     ports:
       - "3000:3000"
     volumes:
