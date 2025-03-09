@@ -1,0 +1,21 @@
+{
+  "name": "hotel-reservation-system-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for hotel reservation system",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "nuxt": "^3.16.0"
+  },
+  "devDependencies": {
+    "@nuxt/typescript-build": "^3.0.2",
+    "typescript": "^5.8.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
