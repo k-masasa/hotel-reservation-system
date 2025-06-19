@@ -16,9 +16,9 @@
               <a href="#" class="text-indigo-600 hover:text-indigo-900 px-3 py-2 rounded-md text-sm font-medium">
                 ダッシュボード
               </a>
-              <a href="#" class="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+              <NuxtLink to="/reservations" class="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                 予約管理
-              </a>
+              </NuxtLink>
               <a href="#" class="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                 客室管理
               </a>
