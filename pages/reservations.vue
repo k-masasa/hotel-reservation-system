@@ -5,9 +5,19 @@
         <!-- Header -->
         <v-row class="mb-6">
           <v-col>
-            <div class="d-flex align-center mb-4">
-              <v-icon size="32" color="primary" class="mr-3">mdi-calendar-month</v-icon>
-              <h1 class="text-h4 font-weight-bold text-primary">予約カレンダー</h1>
+            <div class="d-flex align-center justify-space-between mb-4">
+              <div class="d-flex align-center">
+                <v-icon size="32" color="primary" class="mr-3">mdi-calendar-month</v-icon>
+                <h1 class="text-h4 font-weight-bold text-primary">予約カレンダー</h1>
+              </div>
+              <v-btn
+                color="primary"
+                prepend-icon="mdi-plus"
+                size="large"
+                @click="navigateToNewReservation"
+              >
+                新規予約登録
+              </v-btn>
             </div>
             <p class="text-subtitle-1 text-grey-darken-1">
               客室別の予約状況を一目で確認できます
@@ -419,6 +429,10 @@ const getStatusText = (status: string): string => {
     case 'checked-out': return 'チェックアウト済み'
     default: return status
   }
+}
+
+const navigateToNewReservation = () => {
+  navigateTo('/reservations/new')
 }
 
 // Head configuration

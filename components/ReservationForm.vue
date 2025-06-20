@@ -339,10 +339,12 @@ const adultCountRules = [
 ]
 
 const schoolChildCountRules = [
+  (v: number) => v !== null && v !== undefined || '就学児人数は必須です',
   (v: number) => v >= 0 || '0以上の数値を入力してください'
 ]
 
 const preschoolChildCountRules = [
+  (v: number) => v !== null && v !== undefined || '未就学児人数は必須です',
   (v: number) => v >= 0 || '0以上の数値を入力してください'
 ]
 
