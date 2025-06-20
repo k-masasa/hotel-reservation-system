@@ -11,5 +11,11 @@ export default defineNuxtConfig({
   ],
   build: {
     transpile: ['vuetify']
+  },
+  ssr: true,
+  vite: {
+    build: {
+      sourcemap: false
+    }
   }
 })
