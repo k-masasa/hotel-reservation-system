@@ -11,10 +11,10 @@ COPY . .
 RUN npm run build
 
 RUN addgroup -g 1001 -S nodejs \
-  && adduser -S backend -u 1001 \
-  && chown -R backend:nodejs /app
+  && adduser -S frontend -u 1001 \
+  && chown -R frontend:nodejs /app
 
-USER backend
-EXPOSE 3001
+USER frontend
+EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "preview"]
