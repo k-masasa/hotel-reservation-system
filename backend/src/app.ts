@@ -25,9 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/health', (_req, res) => {
   res.status(200).json({
     status: 'OK',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    service: 'Hotel Reservation Backend API'
   });
 });
 
