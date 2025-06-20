@@ -4,11 +4,9 @@ FROM node:20-alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json for production dependencies
+# Copy package.json and production node_modules
 COPY package.json ./
-
-# Install only production dependencies
-RUN npm install --production
+COPY node_modules ./node_modules
 
 # Copy the pre-built application
 COPY dist ./dist
