@@ -1,7 +1,5 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container fluid class="pa-6">
+  <v-container fluid class="pa-6">
         <!-- Header -->
         <v-row class="mb-6">
           <v-col>
@@ -64,8 +62,6 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-main>
-  </v-app>
 </template>
 
 <script setup lang="ts">
