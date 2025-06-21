@@ -17,5 +17,10 @@ export default defineNuxtConfig({
     build: {
       sourcemap: false
     }
+  },
+  runtimeConfig: {
+    public: {
+      backendUrl: process.env.BACKEND_URL || 'http://backend:3001'
+    }
   }
 })

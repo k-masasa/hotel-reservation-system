@@ -28,6 +28,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=local
+      - BACKEND_URL=http://backend:3001
     restart: unless-stopped
     networks:
       - hotel-network

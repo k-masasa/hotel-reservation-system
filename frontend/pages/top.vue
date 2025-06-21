@@ -226,6 +226,9 @@ definePageMeta({
   title: 'ホテル予約管理システム - トップページ'
 });
 
+// Runtime config
+const config = useRuntimeConfig();
+
 // Reactive data
 const todayReservations = ref<number>(12);
 const availableRooms = ref<number>(25);
@@ -262,6 +265,21 @@ const recentActivities = ref<Activity[]>([
     time: '2時間前'
   }
 ]);
+
+// Call backend health API
+const callHealthApi = async (): Promise<void> => {
+  try {
+    const response = await $fetch(`${config.public.backendUrl}/health`);
+    console.log('Backend health API response:', response);
+  } catch (error) {
+    console.error('Error calling backend health API:', error);
+  }
+};
+
+// Call health API when page mounts
+onMounted(() => {
+  callHealthApi();
+});
 
 // Methods
 const handleNewReservation = (): void => {
