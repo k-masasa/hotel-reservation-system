@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import db from '../database/db';
 import { Reservation, CreateReservationRequest } from '../types/reservation';
 import { createReservationSchema } from '../validation/reservationValidation';
+import Joi from 'joi';
 
 const router = Router();
 
@@ -37,7 +38,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
         success: false,
         error: 'Validation Error',
         message: '入力データに不備があります',
-        details: error.details.map(detail => detail.message)
+        details: error.details.map((detail: Joi.ValidationErrorItem) => detail.message)
       });
       return;
     }
