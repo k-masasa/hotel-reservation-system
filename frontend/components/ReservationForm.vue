@@ -103,6 +103,8 @@
               <v-select
                 v-model="formData.birthYear"
                 :items="BIRTH_YEARS"
+                item-title="text"
+                item-value="value"
                 label="年"
                 :rules="birthYearRules"
                 required
@@ -112,6 +114,8 @@
               <v-select
                 v-model="formData.birthMonth"
                 :items="BIRTH_MONTHS"
+                item-title="text"
+                item-value="value"
                 label="月"
                 :rules="birthMonthRules"
                 required
@@ -121,6 +125,8 @@
               <v-select
                 v-model="formData.birthDay"
                 :items="BIRTH_DAYS"
+                item-title="text"
+                item-value="value"
                 label="日"
                 :rules="birthDayRules"
                 required
@@ -212,6 +218,8 @@
           <v-select
             v-model="formData.roomType"
             :items="ROOM_TYPES"
+            item-title="text"
+            item-value="value"
             label="部屋タイプ"
             :rules="roomTypeRules"
             required

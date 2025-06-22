@@ -6,7 +6,7 @@ import { createReservationSchema } from '../validation/reservationValidation';
 const router = Router();
 
 // GET /api/reservations - Get all reservations
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_req: Request, res: Response) => {
   try {
     const reservations = await db<Reservation>('reservations')
       .where('is_deleted', false)
@@ -27,18 +27,19 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // POST /api/reservations - Create a new reservation
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
     // Validate request body
     const { error, value } = createReservationSchema.validate(req.body);
     
     if (error) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Validation Error',
         message: '入力データに不備があります',
         details: error.details.map(detail => detail.message)
       });
+      return;
     }
     
     const requestData: CreateReservationRequest = value;
@@ -50,41 +51,43 @@ router.post('/', async (req: Request, res: Response) => {
     today.setHours(0, 0, 0, 0);
     
     if (checkInDate < today) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Validation Error',
         message: 'チェックイン日は本日以降の日付を選択してください'
       });
+      return;
     }
     
     if (checkOutDate <= checkInDate) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Validation Error',
         message: 'チェックアウト日はチェックイン日より後の日付を選択してください'
       });
+      return;
     }
     
     // Convert camelCase to snake_case for database
-    const reservationData: Omit<Reservation, 'id' | 'created_at' | 'updated_at'> = {
+    const reservationData: Partial<Reservation> = {
       adult_count: requestData.adultCount,
       school_child_count: requestData.schoolChildCount,
       preschool_child_count: requestData.preschoolChildCount,
       guest_name: requestData.guestName,
       phone_number: requestData.phoneNumber,
       email: requestData.email,
-      address: requestData.address,
-      birth_year: requestData.birthYear,
-      birth_month: requestData.birthMonth,
-      birth_day: requestData.birthDay,
+      address: requestData.address || undefined,
+      birth_year: requestData.birthYear || undefined,
+      birth_month: requestData.birthMonth || undefined,
+      birth_day: requestData.birthDay || undefined,
       check_in_year: requestData.checkInYear,
       check_in_month: requestData.checkInMonth,
       check_in_day: requestData.checkInDay,
       check_out_year: requestData.checkOutYear,
       check_out_month: requestData.checkOutMonth,
       check_out_day: requestData.checkOutDay,
-      room_type: requestData.roomType,
-      room_id: requestData.roomId,
+      room_type: requestData.roomType || undefined,
+      room_id: requestData.roomId || undefined,
       total_price: requestData.totalPrice,
       is_deleted: false,
       is_cancelled: false

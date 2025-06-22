@@ -118,21 +118,46 @@ const submitReservation = async (formData: any) => {
   isSubmitting.value = true
   
   try {
-    // Since this is UI-only, just show an alert and navigate
-    // In a real application, this would make an API call
+    const { createReservation } = useReservationAPI()
     
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 500))
+    // Convert form data to API request format
+    const requestData = {
+      adultCount: formData.adultCount,
+      schoolChildCount: formData.schoolChildCount,
+      preschoolChildCount: formData.preschoolChildCount,
+      guestName: formData.guestName,
+      phoneNumber: formData.phoneNumber,
+      email: formData.email,
+      address: formData.address,
+      birthYear: formData.birthYear,
+      birthMonth: formData.birthMonth,
+      birthDay: formData.birthDay,
+      checkInYear: formData.checkInYear,
+      checkInMonth: formData.checkInMonth,
+      checkInDay: formData.checkInDay,
+      checkOutYear: formData.checkOutYear,
+      checkOutMonth: formData.checkOutMonth,
+      checkOutDay: formData.checkOutDay,
+      roomType: formData.roomType,
+      roomId: formData.roomId,
+      totalPrice: formData.totalPrice
+    }
     
-    // Show success alert
-    alert('予約が正常に登録されました。')
+    const response = await createReservation(requestData)
     
-    // Navigate to reservations page
-    router.push('/reservations')
+    if (response.success) {
+      // Show success alert
+      alert('予約が正常に登録されました。')
+      
+      // Navigate to calendar page (reservations page as fallback)
+      router.push('/reservations')
+    } else {
+      throw new Error(response.message || '予約の登録に失敗しました')
+    }
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error submitting reservation:', error)
-    alert('予約の登録中にエラーが発生しました。もう一度お試しください。')
+    alert(error.message || '予約の登録中にエラーが発生しました。もう一度お試しください。')
   } finally {
     isSubmitting.value = false
   }
