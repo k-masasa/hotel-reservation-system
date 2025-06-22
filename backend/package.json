@@ -7,7 +7,10 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
-    "watch": "ts-node --watch src/server.ts"
+    "watch": "ts-node --watch src/server.ts",
+    "migrate:make": "knex migrate:make",
+    "migrate:latest": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback"
   },
   "keywords": [
     "hotel",
@@ -22,7 +25,10 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.5",
+    "knex": "^3.0.1",
+    "joi": "^17.11.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

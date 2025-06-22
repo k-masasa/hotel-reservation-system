@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import reservationRoutes from './routes/reservations';
 
 const app = express();
 
@@ -29,13 +30,17 @@ app.get('/health', (_req, res) => {
 });
 
 // API routes
+app.use('/api/reservations', reservationRoutes);
+
 app.get('/api', (_req, res) => {
   res.json({
     message: 'Hotel Reservation System Backend API',
     version: '1.0.0',
     endpoints: [
       'GET /health - Health check',
-      'GET /api - API information'
+      'GET /api - API information',
+      'GET /api/reservations - Get all reservations',
+      'POST /api/reservations - Create a new reservation'
     ]
   });
 });
