@@ -1,0 +1,35 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "no-console": "off",
+    "no-unused-vars": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true
+  },
+  "globals": {
+    "defineNuxtConfig": "readonly",
+    "defineNuxtPlugin": "readonly",
+    "navigateTo": "readonly",
+    "useRuntimeConfig": "readonly",
+    "$fetch": "readonly"
+  },
+  "ignorePatterns": [
+    ".nuxt/**",
+    ".output/**",
+    "dist/**",
+    "node_modules/**"
+  ]
+}
