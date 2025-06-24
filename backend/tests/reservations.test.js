@@ -1,22 +1,25 @@
 const request = require('supertest');
 
-// Mock database first
-const mockDb = jest.fn();
-mockDb.mockReturnValue({
+// Create a proper mock function for the database
+const mockQuery = {
   where: jest.fn().mockReturnThis(),
   orderBy: jest.fn().mockReturnThis(),
   insert: jest.fn(),
   first: jest.fn(),
   del: jest.fn(),
   find: jest.fn()
-});
+};
+
+// Mock database function that returns the query builder
+const mockDb = jest.fn(() => mockQuery);
 mockDb.destroy = jest.fn();
 
-// Mock the modules
+// Mock the database module - this needs to be at top level
 jest.mock('../dist/database/db', () => ({
   default: mockDb
 }));
 
+// Now import the app after mocking
 const app = require('../dist/app').default;
 
 describe('Reservations API', () => {
@@ -34,26 +37,20 @@ describe('Reservations API', () => {
     // Reset mocks before each test
     jest.clearAllMocks();
     
-    // Default mock implementations
-    mockDb.mockImplementation(() => ({
-      where: jest.fn().mockReturnThis(),
-      orderBy: jest.fn().mockReturnThis(),
-      insert: jest.fn().mockResolvedValue([1]),
-      first: jest.fn().mockResolvedValue(null),
-      del: jest.fn().mockResolvedValue(1),
-      find: jest.fn().mockResolvedValue([])
-    }));
+    // Reset default mock implementations
+    mockQuery.where.mockReturnThis();
+    mockQuery.orderBy.mockReturnThis();
+    mockQuery.insert.mockResolvedValue([1]);
+    mockQuery.first.mockResolvedValue(null);
+    mockQuery.del.mockResolvedValue(1);
+    mockQuery.find.mockResolvedValue([]);
   });
 
   describe('GET /api/reservations', () => {
     it('should return empty array when no reservations exist', async () => {
       // Mock empty result
-      const mockWhere = jest.fn().mockReturnThis();
-      const mockOrderBy = jest.fn().mockResolvedValue([]);
-      mockDb.mockImplementation(() => ({
-        where: mockWhere,
-        orderBy: mockOrderBy
-      }));
+      mockQuery.where.mockReturnThis();
+      mockQuery.orderBy.mockResolvedValue([]);
 
       const response = await request(app)
         .get('/api/reservations')
@@ -63,7 +60,7 @@ describe('Reservations API', () => {
         success: true,
         data: []
       });
-      expect(mockWhere).toHaveBeenCalledWith('is_deleted', false);
+      expect(mockQuery.where).toHaveBeenCalledWith('is_deleted', false);
     });
 
     it('should return reservations when they exist', async () => {
@@ -80,12 +77,8 @@ describe('Reservations API', () => {
         is_deleted: false
       }];
 
-      const mockWhere = jest.fn().mockReturnThis();
-      const mockOrderBy = jest.fn().mockResolvedValue(testReservations);
-      mockDb.mockImplementation(() => ({
-        where: mockWhere,
-        orderBy: mockOrderBy
-      }));
+      mockQuery.where.mockReturnThis();
+      mockQuery.orderBy.mockResolvedValue(testReservations);
 
       const response = await request(app)
         .get('/api/reservations')
@@ -93,17 +86,13 @@ describe('Reservations API', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(testReservations);
-      expect(mockWhere).toHaveBeenCalledWith('is_deleted', false);
+      expect(mockQuery.where).toHaveBeenCalledWith('is_deleted', false);
     });
 
     it('should not return deleted reservations', async () => {
       // Mock that only non-deleted reservations are returned
-      const mockWhere = jest.fn().mockReturnThis();
-      const mockOrderBy = jest.fn().mockResolvedValue([]);
-      mockDb.mockImplementation(() => ({
-        where: mockWhere,
-        orderBy: mockOrderBy
-      }));
+      mockQuery.where.mockReturnThis();
+      mockQuery.orderBy.mockResolvedValue([]);
 
       const response = await request(app)
         .get('/api/reservations')
@@ -111,7 +100,7 @@ describe('Reservations API', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual([]);
-      expect(mockWhere).toHaveBeenCalledWith('is_deleted', false);
+      expect(mockQuery.where).toHaveBeenCalledWith('is_deleted', false);
     });
   });
 
@@ -127,21 +116,21 @@ describe('Reservations API', () => {
       birthYear: 1990,
       birthMonth: 5,
       birthDay: 15,
-      checkInYear: 2024,
+      checkInYear: 2025,
       checkInMonth: 12,
       checkInDay: 25,
-      checkOutYear: 2024,
+      checkOutYear: 2025,
       checkOutMonth: 12,
       checkOutDay: 27,
-      roomType: 'single',
+      roomType: 'スタンダード',
       roomId: 101,
       totalPrice: 15000
     };
 
     it('should create a reservation with valid data', async () => {
-      const mockInsert = jest.fn().mockResolvedValue([1]);
-      const mockWhere = jest.fn().mockReturnThis();
-      const mockFirst = jest.fn().mockResolvedValue({
+      mockQuery.insert.mockResolvedValue([1]);
+      mockQuery.where.mockReturnThis();
+      mockQuery.first.mockResolvedValue({
         id: 1,
         guest_name: 'Test Reservation User',
         phone_number: '090-1111-2222',
@@ -153,12 +142,6 @@ describe('Reservations API', () => {
         is_deleted: false,
         is_cancelled: false
       });
-
-      mockDb.mockImplementation(() => ({
-        insert: mockInsert,
-        where: mockWhere,
-        first: mockFirst
-      }));
 
       const response = await request(app)
         .post('/api/reservations')
@@ -225,10 +208,10 @@ describe('Reservations API', () => {
     it('should reject reservation where check-out is before check-in', async () => {
       const invalidData = {
         ...validReservationData,
-        checkInYear: 2024,
+        checkInYear: 2025,
         checkInMonth: 12,
         checkInDay: 27,
-        checkOutYear: 2024,
+        checkOutYear: 2025,
         checkOutMonth: 12,
         checkOutDay: 25  // Before check-in
       };
@@ -248,10 +231,10 @@ describe('Reservations API', () => {
     it('should reject reservation where check-out equals check-in', async () => {
       const invalidData = {
         ...validReservationData,
-        checkInYear: 2024,
+        checkInYear: 2025,
         checkInMonth: 12,
         checkInDay: 25,
-        checkOutYear: 2024,
+        checkOutYear: 2025,
         checkOutMonth: 12,
         checkOutDay: 25  // Same as check-in
       };
