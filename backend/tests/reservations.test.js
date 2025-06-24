@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-// Create a proper mock function for the database
+// Create a proper mock function for the database query builder
 const mockQuery = {
   where: jest.fn().mockReturnThis(),
   orderBy: jest.fn().mockReturnThis(),
@@ -14,23 +14,22 @@ const mockQuery = {
 const mockDb = jest.fn(() => mockQuery);
 mockDb.destroy = jest.fn();
 
-// Mock the database module - this needs to be at top level
-jest.mock('../dist/database/db', () => ({
-  default: mockDb
-}));
-
-// Now import the app after mocking
-const app = require('../dist/app').default;
+// Mock the knex database module BEFORE requiring the app
+jest.mock('../dist/database/db', () => mockDb);
 
 describe('Reservations API', () => {
+  let app;
+
   beforeAll(async () => {
-    // Setup test database if needed
-    // For now, we'll assume database is running and accessible
+    // Import app after mocking
+    app = require('../dist/app').default;
   });
 
   afterAll(async () => {
-    // Clean up database connections
-    await mockDb.destroy();
+    // Clean up database connections if needed
+    if (mockDb.destroy) {
+      await mockDb.destroy();
+    }
   });
 
   beforeEach(async () => {
