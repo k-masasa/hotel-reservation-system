@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: hotel_reservation
+          MYSQL_USER: hotel_user
+          MYSQL_PASSWORD: hotel_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: |
+          backend/package-lock.json
+          frontend/package-lock.json
+
+    # Backend setup and testing
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Build backend
+      working-directory: ./backend
+      run: npm run build
+
+    - name: Lint backend
+      working-directory: ./backend
+      run: npm run lint
+
+    - name: Test backend
+      working-directory: ./backend
+      run: npm test
+      env:
+        DB_HOST: localhost
+        DB_PORT: 3306
+        DB_NAME: hotel_reservation
+        DB_USER: hotel_user
+        DB_PASSWORD: hotel_password
+
+    # Frontend setup and testing
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+
+    - name: Lint frontend
+      working-directory: ./frontend
+      run: npm run lint
+
+    # Docker build verification
+    - name: Build backend Docker image
+      run: |
+        cd backend
+        docker build -t hotel-backend:test .
+
+    - name: Build frontend Docker image
+      run: |
+        cd frontend
+        docker build -t hotel-frontend:test .

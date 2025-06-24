@@ -27,3 +27,10 @@ logs
 backend/dist
 backend/node_modules
 backend/*.log
+backend/coverage
+backend/dist-test
+
+# Frontend build artifacts
+frontend/node_modules
+frontend/*.log
+frontend/coverage
